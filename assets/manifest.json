@@ -32,6 +32,12 @@
   },
 
   "commands": {
+    "wtf": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S"
+      },
+      "description": "wtf the extension"
+    },
     "_execute_browser_action": {
       "suggested_key": {
         "default": "Ctrl+Q",

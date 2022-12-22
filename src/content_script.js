@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import getCaretCoordinates from 'textarea-caret'
 import ContentApp from './components/content_app'
 import { styleContainer } from './utils'
-import { getOptions } from './options'
+import { getOptions, setOptions } from './options'
 
 const CONTAINER_ID = 'ycce-container'
 
@@ -235,10 +235,21 @@ function render(options, hide) {
 function main() {
   getOptions().then((options) => {
     chrome.runtime.onMessage.addListener((msg) => {
-      if (msg.type !== 'ycce') {
-        return
+      switch (msg.type) {
+        case 'toogle':
+          const option2 = Object.assign(options, {tempDisabled: !options.tempDisabled})
+          setOptions(option2)
+          console.log('case wtf message')
+          break
+        case 'log':
+          console.log('log: ', msg.message, msg.data)
+          break
+        case 'ycce':
+          options.tempDisabled = msg.tempDisabled
+          break
+        default:
+          console.log('command not found: ', msg)
       }
-      options.tempDisabled = msg.tempDisabled
     })
     createSelectionStream(render, options)
   })

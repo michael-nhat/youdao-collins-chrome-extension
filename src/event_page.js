@@ -2,6 +2,7 @@ import { EVENTS, onMessage } from './message'
 import { parse } from './parse'
 import { getWordURL, have } from './words'
 import ShanbayOauth from './lib/shanbay_oauth2'
+import { sendMessage } from './message'
 
 const { CLEAR_SHANBAY_TOKEN, SEARCH_WORD, OPEN_NEW_TAB, ADD_WORD_SHANBAY } = EVENTS
 let oauth = null
@@ -141,6 +142,24 @@ function init() {
 
   onMessage(CLEAR_SHANBAY_TOKEN, () => {
     clearShanbayToken()
+  })
+
+  //handle shortcut
+  chrome.commands.onCommand.addListener((command) => {
+    switch (command) {
+      case 'wtf':
+        console.log("command wtf")
+        chrome.tabs.query({}, (tabs) => {
+          tabs.forEach((tab) => {
+            chrome.tabs.sendMessage(tab.id, {
+              type: 'toogle',
+            })
+          })
+        })
+        break
+      default:
+        console.log(`Command ${command} not found`)
+    }
   })
 }
 

@@ -108,6 +108,17 @@ class Searcher extends Component {
       inputContent: '',
       tempDisabled: false,
     }
+
+    chrome.tabs.query({}, (tabs) => {
+      // console.log(tabs)
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, {
+          type: 'log',
+          message: 'log at searcher demo',
+          data: null,
+        })
+      })
+    })
   }
 
   componentDidMount() {
@@ -122,6 +133,17 @@ class Searcher extends Component {
   }
 
   changeTempDisabled() {
+    chrome.tabs.query({}, (tabs) => {
+      // console.log(tabs)
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, {
+          type: 'log',
+          content: 'log at changeTempDisabled ',
+          data: null,
+        })
+      })
+    })
+
     const { tempDisabled } = this.state
 
     this.setState({
