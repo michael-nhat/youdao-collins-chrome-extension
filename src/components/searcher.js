@@ -110,7 +110,6 @@ class Searcher extends Component {
     }
 
     chrome.tabs.query({}, (tabs) => {
-      // console.log(tabs)
       tabs.forEach((tab) => {
         chrome.tabs.sendMessage(tab.id, {
           type: 'log',
@@ -134,7 +133,6 @@ class Searcher extends Component {
 
   changeTempDisabled() {
     chrome.tabs.query({}, (tabs) => {
-      // console.log(tabs)
       tabs.forEach((tab) => {
         chrome.tabs.sendMessage(tab.id, {
           type: 'log',

@@ -1,3 +1,5 @@
+import { sendMessage } from "./message"
+
 export const SHOW_NOTEBOOK_OPTIONS = false
 
 const DEFAULT_ACTIVE_TYPE = 'ALWAYS'
@@ -32,6 +34,11 @@ export function getOptions() {
 }
 
 export function setOptions(options) {
+  if (options.tempDisabled) {
+    sendMessage('updateIcon', true)
+  } else {
+    sendMessage('updateIcon', false)
+  }
   return new Promise((resolve) => {
     chrome.storage.sync.set({
       options,

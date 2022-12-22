@@ -239,7 +239,6 @@ function main() {
         case 'toogle':
           const option2 = Object.assign(options, {tempDisabled: !options.tempDisabled})
           setOptions(option2)
-          console.log('case wtf message')
           break
         case 'log':
           console.log('log: ', msg.message, msg.data)

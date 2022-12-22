@@ -144,11 +144,19 @@ function init() {
     clearShanbayToken()
   })
 
+  onMessage('updateIcon', (value) => {
+    console.log('updateIcon at background: ', value)
+    if (!value) {
+      chrome.browserAction.setIcon({path: "./icons/icon17.png"})
+    } else {
+      chrome.browserAction.setIcon({path: "./icons/icon16.png"})
+    }
+  })
+
   //handle shortcut
   chrome.commands.onCommand.addListener((command) => {
     switch (command) {
       case 'wtf':
-        console.log("command wtf")
         chrome.tabs.query({}, (tabs) => {
           tabs.forEach((tab) => {
             chrome.tabs.sendMessage(tab.id, {
