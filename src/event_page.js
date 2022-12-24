@@ -144,12 +144,16 @@ function init() {
     clearShanbayToken()
   })
 
+      var laserExtensionId = 'oappnenomkdmmhfppgijdkbmchjefeic'
+      var port = chrome.runtime.connect(laserExtensionId)
+
   onMessage('updateIcon', (value) => {
-    console.log('updateIcon at background: ', value)
     if (!value) {
-      chrome.browserAction.setIcon({path: "./icons/icon17.png"})
+      chrome.browserAction.setIcon({ path: './icons/icon17.png' })
+      port.postMessage({ messageData: 'activate' })
     } else {
-      chrome.browserAction.setIcon({path: "./icons/icon16.png"})
+      chrome.browserAction.setIcon({ path: './icons/icon16.png' })
+      port.postMessage({ messageData: 'deactivate' })
     }
   })
 
