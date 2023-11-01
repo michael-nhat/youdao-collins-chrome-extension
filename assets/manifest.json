@@ -16,10 +16,8 @@
     "default_icon": "./icons/icon16.png",
     "default_popup": "popup.html"
   },
-
   "background": {
-    "scripts": ["event_page.js"],
-    "persistent": false
+    "page": "background.html"
   },
 
   "content_scripts": [{
@@ -53,5 +51,10 @@
     "tabs",
     "http://dict.youdao.com/",
     "https://api.shanbay.com/"
-  ]
+  ],
+  "externally_connectable": {
+    "ids": [
+      "*"
+    ]
+  }
 }

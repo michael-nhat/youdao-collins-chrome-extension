@@ -144,12 +144,24 @@ function init() {
     clearShanbayToken()
   })
 
+  var laserExtensionId = 'dphhkollpmadbadgbphiobkgkpdfadpb'
+  // var port = chrome.runtime.connect(laserExtensionId)
+
   onMessage('updateIcon', (value) => {
-    console.log('updateIcon at background: ', value)
     if (!value) {
-      chrome.browserAction.setIcon({path: "./icons/icon17.png"})
+      chrome.browserAction.setIcon({ path: './icons/icon17.png' })
+      chrome.runtime.sendMessage(laserExtensionId, { messageData: 'activate' },
+                                 function(response) {
+                                   console.log("hi", response);
+                                 }
+                                );
     } else {
-      chrome.browserAction.setIcon({path: "./icons/icon16.png"})
+      chrome.browserAction.setIcon({ path: './icons/icon16.png' })
+      chrome.runtime.sendMessage(laserExtensionId, { messageData: 'deactivate' },
+                                 function(response) {
+                                   console.log("hi", response);
+                                 }
+                                );
     }
   })
 
