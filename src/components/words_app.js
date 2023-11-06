@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { get, remove, getWordURL } from '../words'
-import { colorPrimary } from './style'
+import React, { Component } from 'react';
+import { get, remove, getWordURL } from '../words';
+import { colorPrimary } from './style';
 
 const styles = {
   word: {
@@ -28,65 +28,65 @@ const styles = {
     marginLeft: 6,
     cursor: 'pointer',
   },
-}
+};
 
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.removeWord = this.removeWord.bind(this)
+    this.removeWord = this.removeWord.bind(this);
 
     this.state = {
       words: null,
-    }
+    };
   }
 
   componentDidMount() {
     get().then((words) => {
       this.setState({
         words,
-      })
-    })
+      });
+    });
   }
 
   removeWord(word) {
     remove(word).then((words) => {
       this.setState({
         words,
-      })
-    })
+      });
+    });
   }
 
   render() {
-    const { removeWord } = this
-    const { words } = this.state
+    const { removeWord } = this;
+    const { words } = this.state;
 
     if (!words) {
-      return null
+      return null;
     }
 
     return (
       <div>
         <div>生词: </div>
         <div style={{ marginTop: 14 }}>
-          {words.map(word => (
+          {words.map((word) => (
             <div key={word} style={styles.word}>
-              <a
-                href={getWordURL(word)}
-                target="_blank"
-                style={styles.text}
-              >
+              <a href={getWordURL(word)} target="_blank" style={styles.text}>
                 {word}
               </a>
-              <div title={`移除${word}`} style={styles.removeBtn} onClick={() => removeWord(word)}>
+              <div
+                title={`移除${word}`}
+                style={styles.removeBtn}
+                onClick={() => removeWord(word)}
+              >
                 <span>x</span>
               </div>
             </div>
           ))}
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default App
+export default App;

@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import icons from './icons'
-import { addNotebookWord } from '../message'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import icons from './icons';
+import { addNotebookWord } from '../message';
 
-const SHANBAY_URL = 'https://www.shanbay.com/bdc/learnings/library/'
+const SHANBAY_URL = 'https://www.shanbay.com/bdc/learnings/library/';
 
 const styles = {
   container: {
@@ -24,68 +24,60 @@ const styles = {
     width: 8,
     height: 8,
   },
-}
+};
 
 class AddWord extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    const { defaultAdded } = props
+    const { defaultAdded } = props;
 
-    this.addWord = this.addWord.bind(this)
+    this.addWord = this.addWord.bind(this);
 
     this.state = {
       added: defaultAdded,
-    }
+    };
   }
 
-  componentWillMount() {
-
-  }
+  componentWillMount() {}
 
   addWord() {
-    const { word } = this.props
+    const { word } = this.props;
 
-    addNotebookWord(word).then((response) => {
-      const { success, msg } = response
+    addNotebookWord(word)
+      .then((response) => {
+        const { success, msg } = response;
 
-      if (!success) {
-        throw new Error(msg)
-      }
+        if (!success) {
+          throw new Error(msg);
+        }
 
-      this.setState({
-        added: true,
+        this.setState({
+          added: true,
+        });
       })
-    }).catch((err) => {
-      this.props.flash(err.message)
-    })
+      .catch((err) => {
+        this.props.flash(err.message);
+      });
   }
 
   render() {
-    const { addWord } = this
-    const { word, showWordsPage } = this.props
-    const { added } = this.state
+    const { addWord } = this;
+    const { word, showWordsPage } = this.props;
+    const { added } = this.state;
 
     if (!word || !showWordsPage) {
-      return null
+      return null;
     }
 
     const content = (
       <div style={{ display: 'inline-block' }}>
-        <img
-          src={icons.book}
-          style={styles.book}
-          alt="book"
-        />
+        <img src={icons.book} style={styles.book} alt="book" />
         {!added ? (
-          <img
-            src={icons.plus}
-            style={styles.plus}
-            alt="plus"
-          />
+          <img src={icons.plus} style={styles.plus} alt="plus" />
         ) : null}
       </div>
-    )
+    );
 
     return added ? (
       <a
@@ -97,29 +89,25 @@ class AddWord extends Component {
         {content}
       </a>
     ) : (
-      <div
-        title="点击加入扇贝词库"
-        style={styles.container}
-        onClick={addWord}
-      >
+      <div title="点击加入扇贝词库" style={styles.container} onClick={addWord}>
         {content}
       </div>
-    )
+    );
   }
 }
 
-const { string, bool, func } = PropTypes
+const { string, bool, func } = PropTypes;
 
 AddWord.propTypes = {
   showWordsPage: bool.isRequired,
   word: string,
   defaultAdded: bool,
   flash: func.isRequired,
-}
+};
 
 AddWord.defaultProps = {
   word: '',
   defaultAdded: false,
-}
+};
 
-export default AddWord
+export default AddWord;

@@ -1,12 +1,16 @@
-import React, { Component } from 'react'
-import { getOptions, setOptions,
-  ACTIVE_TYPES, SHOW_NOTEBOOK_OPTIONS } from '../options'
-import { getWordsPage } from '../words'
-import { colorPrimary } from './style'
-import { clearShanbayToken } from '../message'
+import React, { Component } from 'react';
+import {
+  getOptions,
+  setOptions,
+  ACTIVE_TYPES,
+  SHOW_NOTEBOOK_OPTIONS,
+} from '../options';
+import { getWordsPage } from '../words';
+import { colorPrimary } from './style';
+import { clearShanbayToken } from '../message';
 
-const FONT_SIZE = 14
-const SIZE = 12
+const FONT_SIZE = 14;
+const SIZE = 12;
 
 const styles = {
   container: {
@@ -21,9 +25,7 @@ const styles = {
   item: {
     marginTop: 10,
   },
-  itemTitle: {
-
-  },
+  itemTitle: {},
   activeTypeContainer: {
     marginTop: 8,
     fontSize: SIZE,
@@ -51,23 +53,23 @@ const styles = {
     fontSize: 12,
     color: colorPrimary,
   },
-}
+};
 
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.wordsPage = getWordsPage()
+    this.wordsPage = getWordsPage();
 
-    this.saveOptions = this.saveOptions.bind(this)
-    this.clearToken = this.clearToken.bind(this)
+    this.saveOptions = this.saveOptions.bind(this);
+    this.clearToken = this.clearToken.bind(this);
 
     this.state = {
       hasClearToken: false,
       saveTips: false,
       inited: false,
       options: null,
-    }
+    };
   }
 
   componentDidMount() {
@@ -75,80 +77,77 @@ class App extends Component {
       this.setState({
         inited: true,
         options,
-      })
-    })
+      });
+    });
   }
 
   saveOptions() {
-    const { options } = this.state
+    const { options } = this.state;
 
     this.setState({
       saveTips: false,
-    })
+    });
 
     setOptions(options).then(() => {
       this.setState({
         saveTips: true,
-      })
-    })
+      });
+    });
   }
 
   changeOptions(type, value) {
-    const { options } = this.state
+    const { options } = this.state;
 
     const nextOptions = Object.assign({}, options, {
       [type]: value,
-    })
+    });
 
     this.setState({
       options: nextOptions,
-    })
+    });
   }
 
   clearToken() {
     this.setState({
       hasClearToken: false,
-    })
+    });
 
-    clearShanbayToken()
+    clearShanbayToken();
 
     this.setState({
       hasClearToken: true,
-    })
+    });
   }
 
   render() {
-    const { clearToken, saveOptions, wordsPage } = this
-    const { saveTips, options, inited, hasClearToken } = this.state
+    const { clearToken, saveOptions, wordsPage } = this;
+    const { saveTips, options, inited, hasClearToken } = this.state;
 
     // eslint-disable-next-line
-    const changeActiveType = this.changeOptions.bind(this, 'activeType')
+    const changeActiveType = this.changeOptions.bind(this, 'activeType');
     // eslint-disable-next-line
-    const changeShowNotebook = this.changeOptions.bind(this, 'showNotebook')
+    const changeShowNotebook = this.changeOptions.bind(this, 'showNotebook');
     // eslint-disable-next-line
-    const changeShowContainChinese = this.changeOptions.bind(this, 'showContainChinese')
+    const changeShowContainChinese = this.changeOptions.bind(
+      this,
+      'showContainChinese',
+    );
 
     if (!inited) {
-      return null
+      return null;
     }
 
-    const showNotebook = options.showNotebook
-    const activeType = options.activeType
-    const showContainChinese = options.showContainChinese
+    const showNotebook = options.showNotebook;
+    const activeType = options.activeType;
+    const showContainChinese = options.showContainChinese;
 
     return (
       <div style={styles.container}>
         <div style={styles.item}>
           <div style={styles.itemTitle}>扇贝单词本设置：</div>
-          {hasClearToken ? (
-            <div style={styles.saveTips}>
-              清除成功
-            </div>
-          ) : null}
+          {hasClearToken ? <div style={styles.saveTips}>清除成功</div> : null}
           <div style={styles.activeTypeContainer}>
-            <button onClick={clearToken}>
-              清除登录信息
-            </button>
+            <button onClick={clearToken}>清除登录信息</button>
           </div>
         </div>
         <div
@@ -203,11 +202,9 @@ class App extends Component {
           </div>
         </div>
         <div style={styles.item}>
-          <div style={styles.itemTitle}>
-            划词翻译设置：
-          </div>
+          <div style={styles.itemTitle}>划词翻译设置：</div>
           <div style={styles.activeTypeContainer}>
-            {Object.keys(ACTIVE_TYPES).map(type => (
+            {Object.keys(ACTIVE_TYPES).map((type) => (
               <div
                 key={type}
                 style={styles.activeTypeItem}
@@ -225,9 +222,7 @@ class App extends Component {
           </div>
         </div>
         <div style={styles.item}>
-          <div style={styles.itemTitle}>
-            中文翻译设置：
-          </div>
+          <div style={styles.itemTitle}>中文翻译设置：</div>
           <div style={styles.activeTypeContainer}>
             <div
               style={styles.activeTypeItem}
@@ -244,17 +239,12 @@ class App extends Component {
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 12, marginTop: 12 }}>保存后重新刷新页面生效</div>
-          {saveTips ? (
-            <div style={styles.saveTips}>
-              保存成功
-            </div>
-          ) : null}
+          <div style={{ fontSize: 12, marginTop: 12 }}>
+            保存后重新刷新页面生效
+          </div>
+          {saveTips ? <div style={styles.saveTips}>保存成功</div> : null}
           <div>
-            <button
-              style={styles.saveBtn}
-              onClick={saveOptions}
-            >
+            <button style={styles.saveBtn} onClick={saveOptions}>
               保存
             </button>
             <a
@@ -267,8 +257,8 @@ class App extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default App
+export default App;

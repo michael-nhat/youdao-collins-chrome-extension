@@ -1457,6 +1457,6 @@ neteaseTracker();
 </script>
 <!-- END NetEase Devilfish 2006 -->
 </body>
-</html>`
+</html>`;
 
-export default page
+export default page;

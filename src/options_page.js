@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './components/options_app'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/options_app';
 
-ReactDOM.render(<App />, document.getElementById('main'))
+ReactDOM.render(<App />, document.getElementById('main'));

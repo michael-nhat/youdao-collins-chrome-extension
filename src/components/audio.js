@@ -1,40 +1,40 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import icons from './icons'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import icons from './icons';
 
-const { string } = PropTypes
+const { string } = PropTypes;
 
 function getAudioURL(word, type = 1) {
-  return `http://dict.youdao.com/dictvoice?audio=${word}&type=${type}`
+  return `http://dict.youdao.com/dictvoice?audio=${word}&type=${type}`;
 }
 
 class Audio extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.playAudio = this.playAudio.bind(this)
+    this.playAudio = this.playAudio.bind(this);
 
-    this.refers = {}
+    this.refers = {};
     this.state = {
       hide: false,
-    }
+    };
   }
 
   playAudio() {
-    this.refers.audio.play()
+    this.refers.audio.play();
   }
 
   render() {
-    const { playAudio } = this
-    const { word } = this.props
-    const { hide } = this.state
-    const url = getAudioURL(word)
+    const { playAudio } = this;
+    const { word } = this.props;
+    const { hide } = this.state;
+    const url = getAudioURL(word);
 
     const style = {
       cursor: 'pointer',
       verticalAlign: 'middle',
       display: hide ? 'none' : 'inline-block',
-    }
+    };
 
     return (
       <span style={style}>
@@ -46,20 +46,19 @@ class Audio extends Component {
         />
         <audio
           ref={(audio) => {
-            this.refers.audio = audio
+            this.refers.audio = audio;
           }}
           src={url}
           onError={() => this.setState({ hide: true })}
           preload="none"
         />
       </span>
-    )
+    );
   }
 }
 
 Audio.propTypes = {
   word: string.isRequired,
-}
+};
 
-
-export default Audio
+export default Audio;

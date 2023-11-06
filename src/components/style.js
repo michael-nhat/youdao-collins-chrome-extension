@@ -1,17 +1,17 @@
-export const fontS = 12
-export const fontN = 14
-export const fontL = 18
-export const gapL = 10
-export const gapM = 8
-export const gapS = 4
-export const mainBG = '#eff5f8'
-export const colorDanger = '#d9534f'
-export const colorMuted = '#636c72'
-export const colorWarning = '#f0ad4e'
-export const colorPrimary = '#0275d8'
-export const colorSuccess = '#5cb85c'
-export const colorInfo = '#5bc0de'
-export const colorBorder = '#D4D4D5'
+export const fontS = 12;
+export const fontN = 14;
+export const fontL = 18;
+export const gapL = 10;
+export const gapM = 8;
+export const gapS = 4;
+export const mainBG = '#eff5f8';
+export const colorDanger = '#d9534f';
+export const colorMuted = '#636c72';
+export const colorWarning = '#f0ad4e';
+export const colorPrimary = '#0275d8';
+export const colorSuccess = '#5cb85c';
+export const colorInfo = '#5bc0de';
+export const colorBorder = '#D4D4D5';
 
 export const btn = {
   width: 40,
@@ -36,4 +36,4 @@ export const btn = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-}
+};

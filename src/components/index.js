@@ -1,9 +1,9 @@
-import Detail from './detail'
-import Searcher from './searcher'
+import Detail from './detail';
+import Searcher from './searcher';
 
 const components = {
   Detail,
   Searcher,
-}
+};
 
-export default components
+export default components;

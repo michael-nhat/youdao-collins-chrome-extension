@@ -1,92 +1,95 @@
-import { EVENTS, onMessage } from './message'
-import { parse } from './parse'
-import { getWordURL, have } from './words'
-import ShanbayOauth from './lib/shanbay_oauth2'
-import { sendMessage } from './message'
+import { EVENTS, onMessage } from './message';
+import { parse } from './parse';
+import { getWordURL, have } from './words';
+import ShanbayOauth from './lib/shanbay_oauth2';
+import { sendMessage } from './message';
 
-const { CLEAR_SHANBAY_TOKEN, SEARCH_WORD, OPEN_NEW_TAB, ADD_WORD_SHANBAY } = EVENTS
-let oauth = null
+const { CLEAR_SHANBAY_TOKEN, SEARCH_WORD, OPEN_NEW_TAB, ADD_WORD_SHANBAY } =
+  EVENTS;
+let oauth = null;
 
 async function getWordExplain(body) {
-  const explain = parse(body)
+  const explain = parse(body);
 
   if (explain && explain.wordInfo && explain.wordInfo.word) {
-    const word = explain.wordInfo.word
-    const added = await have(word)
-    explain.added = added
+    const word = explain.wordInfo.word;
+    const added = await have(word);
+    explain.added = added;
   }
 
-  return explain
+  return explain;
 }
 
 async function getWords(word, sendRes) {
-  const url = getWordURL(word)
-  const body = await fetch(url).then(res => res.text())
-  const explain = await getWordExplain(body)
+  const url = getWordURL(word);
+  const body = await fetch(url).then((res) => res.text());
+  const explain = await getWordExplain(body);
 
-  sendRes(explain)
+  sendRes(explain);
 }
 
 function authorize() {
   return new Promise((resolve) => {
     oauth.authorize(() => {
-      resolve()
-    })
-  })
+      resolve();
+    });
+  });
 }
 
-const ADD_WORD_URL = 'https://api.shanbay.com/bdc/learning/'
-const SEARCH_WORD_URL = 'https://api.shanbay.com/bdc/search/'
+const ADD_WORD_URL = 'https://api.shanbay.com/bdc/learning/';
+const SEARCH_WORD_URL = 'https://api.shanbay.com/bdc/search/';
 
 function getWord(url) {
-  return fetch(url).then(res => res.json()).then((res) => {
-    const { data, msg } = res
+  return fetch(url)
+    .then((res) => res.json())
+    .then((res) => {
+      const { data, msg } = res;
 
-    if (msg !== 'SUCCESS') {
-      throw new Error(msg)
-    }
+      if (msg !== 'SUCCESS') {
+        throw new Error(msg);
+      }
 
-    return data
-  })
+      return data;
+    });
 }
 
 function clearShanbayToken() {
-  oauth.clearToken()
+  oauth.clearToken();
 }
 
 async function addWordToShanbay(data, sendRes) {
   // redirect
   if (!oauth.token_valid()) {
-    await authorize()
+    await authorize();
   }
 
-  const token = oauth.access_token()
+  const token = oauth.access_token();
 
-  const searchURL = `${SEARCH_WORD_URL}?word=${data}&access_token=${token}`
+  const searchURL = `${SEARCH_WORD_URL}?word=${data}&access_token=${token}`;
 
-  let response = null
+  let response = null;
 
   try {
-    response = await getWord(searchURL)
+    response = await getWord(searchURL);
   } catch (err) {
     // 如果token失效，清除token并重新添加
     if (err.message === 'Invalid token') {
-      clearShanbayToken()
-      await addWordToShanbay(data, sendRes)
-      return
+      clearShanbayToken();
+      await addWordToShanbay(data, sendRes);
+      return;
     }
 
     sendRes({
       success: false,
       msg: err.message,
-    })
+    });
 
-    return
+    return;
   }
 
-  const { id } = response
+  const { id } = response;
 
-  const addWordURL = `${ADD_WORD_URL}?access_token=${token}`
+  const addWordURL = `${ADD_WORD_URL}?access_token=${token}`;
 
   try {
     response = await fetch(addWordURL, {
@@ -98,72 +101,78 @@ async function addWordToShanbay(data, sendRes) {
         id,
         access_token: token,
       }),
-    }).then(res => res.json()).then((res) => {
-      const { data: d, msg } = res
-
-      if (msg !== 'SUCCESS') {
-        throw new Error(msg)
-      }
-
-      return d
     })
+      .then((res) => res.json())
+      .then((res) => {
+        const { data: d, msg } = res;
+
+        if (msg !== 'SUCCESS') {
+          throw new Error(msg);
+        }
+
+        return d;
+      });
   } catch (err) {
     sendRes({
       success: false,
       msg: err.message,
-    })
+    });
 
-    return
+    return;
   }
 
   sendRes({
     success: true,
-  })
+  });
 }
 
 function openNewTab(word) {
-  chrome.tabs.create({ url: getWordURL(word) })
+  chrome.tabs.create({ url: getWordURL(word) });
 }
 
 function init() {
-  oauth = ShanbayOauth.initPage()
+  oauth = ShanbayOauth.initPage();
 
   onMessage(SEARCH_WORD, (data, sendRes) => {
-    getWords(data, sendRes)
-  })
+    getWords(data, sendRes);
+  });
 
   onMessage(OPEN_NEW_TAB, (data) => {
-    openNewTab(data)
-  })
+    openNewTab(data);
+  });
 
   onMessage(ADD_WORD_SHANBAY, (data, sendRes) => {
-    addWordToShanbay(data, sendRes)
-  })
+    addWordToShanbay(data, sendRes);
+  });
 
   onMessage(CLEAR_SHANBAY_TOKEN, () => {
-    clearShanbayToken()
-  })
+    clearShanbayToken();
+  });
 
-  var laserExtensionId = 'dphhkollpmadbadgbphiobkgkpdfadpb'
+  var laserExtensionId = 'dphhkollpmadbadgbphiobkgkpdfadpb';
   // var port = chrome.runtime.connect(laserExtensionId)
 
   onMessage('updateIcon', (value) => {
     if (!value) {
-      chrome.browserAction.setIcon({ path: './icons/icon17.png' })
-      chrome.runtime.sendMessage(laserExtensionId, { messageData: 'activate' },
-                                 function(response) {
-                                   console.log("hi", response);
-                                 }
-                                );
+      chrome.browserAction.setIcon({ path: './icons/icon17.png' });
+      chrome.runtime.sendMessage(
+        laserExtensionId,
+        { messageData: 'activate' },
+        function (response) {
+          console.log('hi', response);
+        },
+      );
     } else {
-      chrome.browserAction.setIcon({ path: './icons/icon16.png' })
-      chrome.runtime.sendMessage(laserExtensionId, { messageData: 'deactivate' },
-                                 function(response) {
-                                   console.log("hi", response);
-                                 }
-                                );
+      chrome.browserAction.setIcon({ path: './icons/icon16.png' });
+      chrome.runtime.sendMessage(
+        laserExtensionId,
+        { messageData: 'deactivate' },
+        function (response) {
+          console.log('hi', response);
+        },
+      );
     }
-  })
+  });
 
   //handle shortcut
   chrome.commands.onCommand.addListener((command) => {
@@ -173,14 +182,14 @@ function init() {
           tabs.forEach((tab) => {
             chrome.tabs.sendMessage(tab.id, {
               type: 'toogle',
-            })
-          })
-        })
-        break
+            });
+          });
+        });
+        break;
       default:
-        console.log(`Command ${command} not found`)
+        console.log(`Command ${command} not found`);
     }
-  })
+  });
 }
 
-init()
+init();

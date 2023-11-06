@@ -1,14 +1,11 @@
-const path = require('path')
+const path = require('path');
 
 function relative(p) {
-  return path.resolve(__dirname, p)
+  return path.resolve(__dirname, p);
 }
 
 function appendDeps(file) {
-  return [
-    'babel-polyfill',
-    file,
-  ]
+  return ['babel-polyfill', file];
 }
 
 module.exports = {
@@ -29,11 +26,9 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        include: [
-          relative('../../src'),
-        ],
+        include: [relative('../../src')],
         loader: 'babel-loader',
       },
     ],
   },
-}
+};
