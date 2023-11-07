@@ -150,27 +150,29 @@ function init() {
   });
 
   var laserExtensionId = 'dphhkollpmadbadgbphiobkgkpdfadpb';
-  // var port = chrome.runtime.connect(laserExtensionId)
+  var port = chrome.runtime.connect(laserExtensionId);
 
   onMessage('updateIcon', (value) => {
     if (!value) {
       chrome.browserAction.setIcon({ path: './icons/icon17.png' });
-      chrome.runtime.sendMessage(
-        laserExtensionId,
-        { messageData: 'activate' },
-        function (response) {
-          console.log('hi', response);
-        },
-      );
+      // chrome.runtime.sendMessage(
+      //   laserExtensionId,
+      //   { messageData: 'activate' },
+      //   function (response) {
+      //     console.log('hi', response);
+      //   },
+      // );
+      port.postMessage({ messageData: 'activate' });
     } else {
       chrome.browserAction.setIcon({ path: './icons/icon16.png' });
-      chrome.runtime.sendMessage(
-        laserExtensionId,
-        { messageData: 'deactivate' },
-        function (response) {
-          console.log('hi', response);
-        },
-      );
+      // chrome.runtime.sendMessage(
+      //   laserExtensionId,
+      //   { messageData: 'deactivate' },
+      //   function (response) {
+      //     console.log('hi', response);
+      //   },
+      // );
+      port.postMessage({ messageData: 'deactivate' });
     }
   });
 

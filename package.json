@@ -1,5 +1,9 @@
 {
   "name": "youdao-collins-chrome-extension",
+  "engines": {
+    "npm": "7.8.0",
+    "node": "<=v17.6.0"
+  },
   "version": "1.2.2",
   "description": "A chrome extension to help you search english words in collins dict.",
   "main": "index.js",
@@ -93,5 +97,9 @@
   },
   "jest": {
     "testRegex": "/src/__tests__/.+spec\\.js$"
+  },
+  "dependencies": {
+    "pinyin": "^3.0.0-alpha.4",
+    "segmentit": "^2.0.3"
   }
 }

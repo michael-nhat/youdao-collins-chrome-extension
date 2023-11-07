@@ -5,6 +5,16 @@ import Audio from './audio';
 import AddWord from './add_word';
 import icons from './icons';
 import Tips from './tips';
+import pinyin from "pinyin";
+import { Segment, useDefault } from 'segmentit';
+const segmentit = useDefault(new Segment());
+
+function segment(str){
+  return segmentit.doSegment(str);
+}
+
+
+
 import {
   mainBG,
   fontS,
@@ -114,18 +124,47 @@ function renderMeaning(meaning, index) {
     explain: { type, typeDesc, engExplain },
   } = meaning;
 
+
+  let b = pinyin(typeDesc, {
+    segment: "segmentit",         // 启用分词
+    group: true,
+  });
+  const segCh = segment(ch || "").map(obj => obj.w).join(" ");
+  let a = pinyin(segCh, {
+  });
+
+  const convertedString = (engExplain||"").replace(/&#x[\dA-Fa-f]+;/g, (match) => {
+    const unicodeValue = match.slice(3, -1); // Extract the hexadecimal Unicode value
+    const chineseCharacter = String.fromCodePoint(parseInt(unicodeValue, 16));
+    return chineseCharacter;
+  });
+  const cleanedString = convertedString.replace(/[a-zA-Z]+/g, '') // Remove alphabetical characters
+    .replace(/\s{2,}/g, ' '); // Replace double spaces with a single space
+  const segC = segment(cleanedString).map(obj => obj.w).join(" ");
+
+  let c = pinyin(segC, {
+  });
+  let ch2 = segment(ch || "").map(obj => obj.w).join(" ");
+  console.log({ch2, ch, engExplain, typeDesc, a, b, c });
+  if (typeof c === "array")
+    c = c.shift();
+  // console.log(a,b,c);
+  const chO = ch2 + " _ " + " _ " + (a ? a.join(" ") : "");
+  const engExplainO = engExplain + " _ " + (c ? c.join(" ") : "");
+  const typeDescO = typeDesc + " _ " + (b?b.join(" ") : "");
+
   return (
     <div key={index} style={styles.meaningItem}>
       <div style={styles.explain}>
         <span style={styles.wordType}>{type}</span>
         <span style={Object.assign({}, styles.wordType, { marginRight: gapL })}>
-          {typeDesc}
+          {typeDescO}
         </span>
-        {renderSentence(engExplain)}
+        {renderSentence(engExplainO)}
       </div>
       <div style={styles.exampleItem}>
         <div style={{ color: colorMuted }}>{eng}</div>
-        <div style={{ color: colorMuted, marginTop: 6 }}>{ch}</div>
+        <div style={{ color: colorMuted, marginTop: 6 }}>{chO}</div>
       </div>
     </div>
   );
@@ -385,6 +424,7 @@ class Detail extends Component {
     }
 
     const { response, type } = wordResponse;
+    console.log("word response:", type, wordResponse);
 
     if (type === 'explain') {
       return renderExplain(

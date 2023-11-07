@@ -4,6 +4,13 @@ import getCaretCoordinates from 'textarea-caret';
 import ContentApp from './components/content_app';
 import { styleContainer } from './utils';
 import { getOptions, setOptions } from './options';
+import pinyin from "pinyin";
+
+var a = pinyin("abc abc 我喜欢你 def", {
+  segment: "segmentit",         // 启用分词
+  group: true,
+});
+console.log(a.join(" "));
 
 const CONTAINER_ID = 'ycce-container';
 
