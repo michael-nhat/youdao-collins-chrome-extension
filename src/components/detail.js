@@ -138,7 +138,7 @@ function renderMeaning(meaning, index) {
     const chineseCharacter = String.fromCodePoint(parseInt(unicodeValue, 16));
     return chineseCharacter;
   });
-  const cleanedString = convertedString.replace(/[a-zA-Z]+/g, '') // Remove alphabetical characters
+  const cleanedString = convertedString.replace(/[a-zA-Z<>\/&;]+/g, '') // Remove alphabetical characters
     .replace(/\s{2,}/g, ' '); // Replace double spaces with a single space
   const segC = segment(cleanedString).map(obj => obj.w).join(" ");
 
@@ -164,7 +164,17 @@ function renderMeaning(meaning, index) {
       </div>
       <div style={styles.exampleItem}>
         <div style={{ color: colorMuted }}>{eng}</div>
-        <div style={{ color: colorMuted, marginTop: 6 }}>{chO}</div>
+        <div style={{ color: colorMuted, marginTop: 6 }}>
+          <span>
+            {ch2}
+          </span>
+          <span>
+          {a && <br />}
+          {a && a.join(" ") }
+          </span>
+          </div>
+          {/* {a && <br />} */}
+          {/* {a && a.join(" ") } */}
       </div>
     </div>
   );

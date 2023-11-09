@@ -4,8 +4,8 @@ import Detail from './detail';
 import { searchWord, openLink } from '../message';
 import { gapS, colorMuted } from './style';
 
-const WIDTH = 400;
-const MAX_HEIGHT = 300;
+const WIDTH = 650;
+const MAX_HEIGHT = 800;
 const PADDING_LEFT = 20;
 const ASSUME_LINE_HEIGHT = 20;
 const LEFT_PAD_PERCENTAGE = 1 / 3;
