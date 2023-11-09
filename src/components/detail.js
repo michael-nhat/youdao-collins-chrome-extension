@@ -1,12 +1,12 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import PropTypes from 'prop-types';
 import Audio from './audio';
 import AddWord from './add_word';
 import icons from './icons';
 import Tips from './tips';
 import pinyin from "pinyin";
-import { Segment, useDefault } from 'segmentit';
+import { DictTokenizer, Segment, useDefault } from 'segmentit';
 const segmentit = useDefault(new Segment());
 
 function segment(str){
@@ -331,13 +331,56 @@ function renderChoices(response: ChoiceResponseType, searchWord) {
   );
 }
 
+function toZh(text, index) {
+  let deving = false;
+  // deving = true;
+  let timeWait = 1;
+  index = 1;
+  if (text.length > 2000) {
+    return new Promise((res, rej) => {
+      res("too long text");
+    });
+  }
+  if (deving) {
+    return new Promise((res, rej) => {
+      res("Developing, text trans here");
+    });
+  }
+  return new Promise((resolve, reject) => {
+    const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh&tl=vi&dt=t&q=${encodeURIComponent(text)}`;
+
+    // Sử dụng fetch để gửi yêu cầu đến API
+    setTimeout(() => {
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const translations = data[0].map(item => item[0]).join('. ');
+          // console.log(data);
+          console.log(`Request ${index} completed.`);
+          resolve(translations);
+        })
+        .catch(error => {
+          console.log(`Request ${index} errored.`);
+          reject(error);
+        });
+    }, timeWait * index);
+  });
+}
+
+
+// currentWord,
+//   navigate,
+//   response ?: NonCollinsExplainsResponseType,
+//   showWordsPage ?: boolean,
+//   showNotebook ?: boolean,
+//   flash: () => {}
 function renderNonCollins(
   currentWord,
   navigate,
-  response?: NonCollinsExplainsResponseType,
-  showWordsPage?: boolean,
-  showNotebook?: boolean,
-  flash: () => {},
+  response,
+  showWordsPage,
+  showNotebook,
+  flash
 ) {
   const wordBasic =
     response && response
@@ -353,12 +396,23 @@ function renderNonCollins(
 
   const responseElement = response ? (
     <div style={{ marginBottom: `${gapL}px` }}>
-      {response.explains.map((item) => (
+      {response.explains.map((item) => {
+
+        var itemExplain = item.type ? item.explain : "";
+        let explainArr = pinyin(item.explain, {
+          segment: "segmentit",
+          group: true,
+        });
+        let explain = (itemExplain ? explainArr.join(" ") : "");
+        return (
         <div key={item.explain} style={styles.choiceItem}>
           {item.type ? <span style={styles.wordType}>{item.type}.</span> : null}
           <span>{item.explain}</span>
-        </div>
-      ))}
+          <br />
+          <span>{explain}</span>
+          </div>
+        );
+      }) }
     </div>
   ) : null;
 
