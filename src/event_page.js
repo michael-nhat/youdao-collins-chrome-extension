@@ -2,6 +2,7 @@ import { EVENTS, onMessage } from './message';
 import { parse } from './parse';
 import { getWordURL, have } from './words';
 import ShanbayOauth from './lib/shanbay_oauth2';
+import { getOptions, setOptions } from './options';
 import { sendMessage } from './message';
 
 const { CLEAR_SHANBAY_TOKEN, SEARCH_WORD, OPEN_NEW_TAB, ADD_WORD_SHANBAY } =
@@ -149,31 +150,34 @@ function init() {
     clearShanbayToken();
   });
 
-  var laserExtensionId = 'dphhkollpmadbadgbphiobkgkpdfadpb';
-  var port = chrome.runtime.connect(laserExtensionId);
+  var port = null;
 
   onMessage('updateIcon', (value) => {
-    if (!value) {
-      chrome.browserAction.setIcon({ path: './icons/icon17.png' });
-      // chrome.runtime.sendMessage(
-      //   laserExtensionId,
-      //   { messageData: 'activate' },
-      //   function (response) {
-      //     console.log('hi', response);
-      //   },
-      // );
-      port.postMessage({ messageData: 'activate' });
-    } else {
-      chrome.browserAction.setIcon({ path: './icons/icon16.png' });
-      // chrome.runtime.sendMessage(
-      //   laserExtensionId,
-      //   { messageData: 'deactivate' },
-      //   function (response) {
-      //     console.log('hi', response);
-      //   },
-      // );
-      port.postMessage({ messageData: 'deactivate' });
-    }
+    getOptions().then(options => {
+      port = chrome.runtime.connect(options.zhongwenId);
+      if (!value) {
+        console.log(port);
+        chrome.browserAction.setIcon({ path: './icons/icon17.png' });
+        // chrome.runtime.sendMessage(
+        //   laserExtensionId,
+        //   { messageData: 'activate' },
+        //   function (response) {
+        //     console.log('hi', response);
+        //   },
+        // );
+        port.postMessage({ messageData: 'activate' });
+      } else {
+        chrome.browserAction.setIcon({ path: './icons/icon16.png' });
+        // chrome.runtime.sendMessage(
+        //   laserExtensionId,
+        //   { messageData: 'deactivate' },
+        //   function (response) {
+        //     console.log('hi', response);
+        //   },
+        // );
+        port.postMessage({ messageData: 'deactivate' });
+      }
+    });
   });
 
   //handle shortcut

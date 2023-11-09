@@ -74,6 +74,7 @@ class App extends Component {
 
   componentDidMount() {
     getOptions().then((options) => {
+      console.log(options);
       this.setState({
         inited: true,
         options,
@@ -87,7 +88,6 @@ class App extends Component {
     this.setState({
       saveTips: false,
     });
-
     setOptions(options).then(() => {
       this.setState({
         saveTips: true,
@@ -127,6 +127,12 @@ class App extends Component {
     const changeActiveType = this.changeOptions.bind(this, 'activeType');
     // eslint-disable-next-line
     const changeShowNotebook = this.changeOptions.bind(this, 'showNotebook');
+    const setZhongwenId =
+          (e)=> {
+            let newOptions =
+                Object.assign(options, { zhongwenId: e.target.value });
+            this.setState({ options: newOptions});
+          };
     // eslint-disable-next-line
     const changeShowContainChinese = this.changeOptions.bind(
       this,
@@ -140,6 +146,7 @@ class App extends Component {
     const showNotebook = options.showNotebook;
     const activeType = options.activeType;
     const showContainChinese = options.showContainChinese;
+    const zhongwenId = options.zhongwenId;
 
     return (
       <div style={styles.container}>
@@ -219,6 +226,22 @@ class App extends Component {
                 <span style={styles.label}>{ACTIVE_TYPES[type]}</span>
               </div>
             ))}
+          </div>
+        </div>
+        <div style={styles.item}>
+          <div style={styles.itemTitle}>中文翻译设置：</div>
+          <div style={styles.activeTypeContainer}>
+            <div
+              style={styles.activeTypeItem}
+            >
+              <input
+                name="zhongwenId"
+                /* style={styles.radio} */
+                onChange={setZhongwenId}
+                defaultValue={zhongwenId}
+              />
+              <span style={styles.label}>zhongwenId here</span>
+            </div>
           </div>
         </div>
         <div style={styles.item}>

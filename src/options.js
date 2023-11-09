@@ -17,6 +17,7 @@ const DEFAULT_OPTIONS = {
   activeType: DEFAULT_ACTIVE_TYPE,
   showNotebook: DEFAULT_SHOW_NOTEBOOK,
   tempDisabled: false,
+  zhongwenId: "",
 };
 
 export function getOptions() {
